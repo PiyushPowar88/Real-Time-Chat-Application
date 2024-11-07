@@ -1,0 +1,14 @@
+run command backend = npm run server
+
+chat app = 1.server.js =  1.auth.routes.js  2.Connect DB(connectToMongoDB) 3.message.routs.js
+
+
+1.auth.routes.js = 1.auth.controller
+
+1.auth.controller = 1.userModel.js 2.generateToken.js
+
+1.message.routes.js = message.controller.js = conversation.model.js
+
+1.message.route.js = protectRoute.js
+
+1.user.route.js = user.controller.js
