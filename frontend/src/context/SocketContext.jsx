@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
        const newSocket = io("http://localhost:1000", {
           query: { userId: authUser._id },
        });
- 
+ console.log("connection established")
        newSocket.on("connect_error", (err) => {
           console.error("Socket connection error:", err);
        });

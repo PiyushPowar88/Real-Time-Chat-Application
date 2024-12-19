@@ -4,36 +4,41 @@ import toast from "react-hot-toast";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { setMessages, selectedConversation } = useConversation();
 
   const sendMessage = async (message) => {
     if (!selectedConversation) {
       toast.error("No conversation selected");
-      return; // Prevent sending if no conversation is selected
+      return false; // Prevent sending if no conversation is selected
     }
 
     setLoading(true);
     try {
-      const res = await fetch(
+      const response = await fetch(
         `/api/messages/send/${selectedConversation._id}`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Corrected header casing
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ message }),
         }
       );
 
-      const data = await res.json();
-      console.log("API Response:", data); // Debug log
+      const data = await response.json();
 
-      if (data.error) throw new Error(data.error);
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Failed to send message");
+      }
 
-      // Update the messages state with the new message
-      setMessages((prevMessages) => [...prevMessages, data]); // Assuming data contains the new message
+      // Assuming the API returns the new message object
+      setMessages((prevMessages) => [...prevMessages, data]);
+console.log("new Message sent is:", data)
+      return true; // Indicate success
     } catch (error) {
-      toast.error(error.message);
+      console.error("SendMessage Error:", error.message);
+      toast.error(error.message || "An error occurred");
+      return false; // Indicate failure
     } finally {
       setLoading(false);
     }
